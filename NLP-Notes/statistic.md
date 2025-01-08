@@ -1,0 +1,5 @@
+* Bag-of-Words: [词袋模型](Statistic/bag-of-words.md)
+* TF-IDF: [TF-IDF](Statistic/tf-idf.md)
+* BM25: [BM25](Statistic/bm25.md)
+* co-occurrence: [共现矩阵](Statistic/co-occurrence.md)
+* ngram: [ngram](Statistic/ngram.md)
