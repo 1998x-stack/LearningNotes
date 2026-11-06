@@ -1,54 +1,43 @@
-def lcs(s1, s2):
-    m, n = len(s1), len(s2)
-    dp = [[0] * (n+1)] * (m+1)
-    for i in range(1, m+1):
-        for j in range(1, n+1):
-            if s1[i-1] == s2[j-1]:
-                dp[i][j] = dp[i-1][j-1] + 1
+"""Longest common subsequence examples (legacy filename uses 'substring')."""
+
+
+def _table(a, b):
+    dp = [[0] * (len(b) + 1) for _ in range(len(a) + 1)]
+    for i in range(1, len(a) + 1):
+        for j in range(1, len(b) + 1):
+            if a[i - 1] == b[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
             else:
-                dp[i][j] = max(dp[i][j-1], dp[i-1][j])
-                
-    return dp[m][n]
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+    return dp
+
+
+def lcs(s1, s2):
+    """Length of the longest common subsequence."""
+    return _table(s1, s2)[len(s1)][len(s2)]
+
 
 def lcs_return_substring(s1, s2):
-    m, n = len(s1), len(s2)
-    dp = [[0] * (n+1)] * (m+1)
-    for i in range(1, m+1):
-        for j in range(1, n+1):
-            if s1[i-1] == s2[j-1]:
-                dp[i][j] = dp[i-1][j-1] + 1
-            else:
-                dp[i][j] = max(dp[i][j-1], dp[i-1][j])
-    
-    i, j = m, n
-    common_substring = ""
-    while i>0 and j>0:
-        if s1[i-1] == s2[j-1]:
-            common_substring = s1[i-1] + common_substring
+    """Return a longest common subsequence; preserve historical API name."""
+    dp = _table(s1, s2)
+    i, j = len(s1), len(s2)
+    result = []
+    while i and j:
+        if s1[i - 1] == s2[j - 1]:
+            result.append(s1[i - 1])
             i -= 1
             j -= 1
-        elif dp[i-1][j] > dp[i][j-1]:
+        elif dp[i - 1][j] > dp[i][j - 1]:
             i -= 1
         else:
             j -= 1
-    
-    return common_substring
+    return "".join(reversed(result))
 
 
 def test_lcs():
-    s1 = "abcde"
-    s2 = "ace"
-    assert lcs(s1, s2) == 3
-    print(lcs_return_substring(s1, s2))
-    s1 = "abc"
-    s2 = "abc"
-    assert lcs(s1, s2) == 3
-    print(lcs_return_substring(s1, s2))
-    s1 = "abcdf"
-    s2 = "zabc"
-    assert lcs(s1, s2) == 3
-    print(lcs_return_substring(s1, s2))
-    print("Passed all tests!")
+    for a, b, expected in (("abcde", "ace", 3), ("abc", "abc", 3), ("abcdf", "zabc", 3)):
+        assert lcs(a, b) == expected
+        assert len(lcs_return_substring(a, b)) == expected
 
 
 if __name__ == "__main__":
